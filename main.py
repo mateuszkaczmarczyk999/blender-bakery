@@ -1,11 +1,46 @@
 import bpy
 import os
 
+sofa_modules = {
+    "S01_AR_D07_W02": "sofa_highpoly/Armrest.fbx",
+    
+    "S01_CN_D08_W08": "sofa_highpoly/Tylko Corner 100x100.fbx",
+    "S01_CN_D09_W09": "sofa_highpoly/Tylko Corner 112,5x112,5.fbx",
+
+    "S01_ST_D08_W06": "sofa_highpoly/Tylko Modul 75x100.fbx",
+    "S01_ST_D08_W07": "sofa_highpoly/Tylko Modul 87,5x100.fbx",
+    "S01_ST_D08_W08": "sofa_highpoly/Tylko Modul 100x100.fbx",
+    "S01_ST_D08_W09": "sofa_highpoly/Tylko Modul 112,5x100.fbx",
+    
+    "S01_ST_D09_W06": "sofa_highpoly/Tylko Modul 75x112,5.fbx",
+    "S01_ST_D09_W07": "sofa_highpoly/Tylko Modul 87,5x112,5.fbx",
+    "S01_ST_D09_W08": "sofa_highpoly/Tylko Modul 100x112,5.fbx",
+    "S01_ST_D09_W09": "sofa_highpoly/Tylko Modul 112,5x112,5.fbx",
+    
+    "S01_CL_D13_W07": "sofa_highpoly/Tylko Modul 87,5x162,5.fbx",
+    "S01_CL_D13_W08": "sofa_highpoly/Tylko Modul 100x162,5.fbx",
+    "S01_CL_D13_W09": "sofa_highpoly/Tylko Modul 112,5x162,5.fbx",
+
+    "S01_FR_D05_W06": "sofa_highpoly/Tylko Ottoman 75x62,5.fbx",
+    "S01_FR_D05_W07": "sofa_highpoly/Tylko Ottoman 87,5x62,5.fbx",
+    "S01_FR_D05_W08": "sofa_highpoly/Tylko Ottoman 100x62,5.fbx",
+    "S01_FR_D05_W09": "sofa_highpoly/Tylko Ottoman 112,5x62,5.fbx",
+
+    "S01_FR_D06_W06": "sofa_highpoly/Tylko Ottoman 75x75.fbx",
+    "S01_FR_D06_W07": "sofa_highpoly/Tylko Ottoman 87,5x75.fbx",
+    "S01_FR_D06_W08": "sofa_highpoly/Tylko Ottoman 100x75.fbx",
+    "S01_FR_D06_W09": "sofa_highpoly/Tylko Ottoman 112,5x75.fbx",
+
+    "S01_FR_D07_W07": "sofa_highpoly/Tylko Ottoman 87,5x87,5.fbx",
+    "S01_FR_D07_W08": "sofa_highpoly/Tylko Ottoman 100x87,5.fbx",
+    "S01_FR_D07_W09": "sofa_highpoly/Tylko Ottoman 112,5x87,5.fbx",
+    
+    "S01_FR_D08_W08": "sofa_highpoly/Tylko Ottoman 100x100.fbx",
+    "S01_FR_D08_W09": "sofa_highpoly/Tylko Ottoman 112,5x100.fbx",
+    "S01_FR_D09_W09": "sofa_highpoly/Tylko Ottoman 112,5x112,5.fbx",
+}
+
 directory = os.path.dirname(os.path.abspath(__file__))
-fbx_file_path = os.path.join(directory, "sofa_highpoly/Tylko Modul 100x100.fbx")
-bake_output_path = os.path.join(directory, "baked_ao_1k.hdr")  # HDR AO texture (1K)
-export_glb_path = os.path.join(directory, "exported_output.glb")  # GLB file
-blend_file_path = os.path.join(directory, "cube.blend")  # Blender file
 
 # ✅ Initialize Blend File
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -14,32 +49,36 @@ scene.render.engine = "CYCLES"
 scene.cycles.device = "GPU"
 scene.cycles.samples = 128
 
-if not os.path.exists(fbx_file_path):
-    print(f"Error: FBX file not found at {fbx_file_path}")
-else:
-    # ✅ Create Studio Setup
-    studio_collection = bpy.data.collections.new(name="STUDIO")
-    bpy.context.scene.collection.children.link(studio_collection)
+# ✅ Create Studio Setup
+studio_collection = bpy.data.collections.new(name="STUDIO")
+bpy.context.scene.collection.children.link(studio_collection)
 
-    bpy.ops.mesh.primitive_plane_add(size=5, location=(0, 0, 0))
-    ground = bpy.context.object
-    ground.name = "ground"
-    studio_collection.objects.link(ground)
-    bpy.context.scene.collection.objects.unlink(ground)
+bpy.ops.mesh.primitive_plane_add(size=5, location=(0, 0, 0))
+ground = bpy.context.object
+ground.name = "ground"
+studio_collection.objects.link(ground)
+bpy.context.scene.collection.objects.unlink(ground)
 
-    bpy.ops.object.light_add(type="AREA", location=(0, 0, 5))
-    area_light = bpy.context.object
-    area_light.name = "primary_light"
-    area_light.data.energy = 700
-    area_light.data.shape = "DISK"
-    area_light.data.size = 5
-    studio_collection.objects.link(area_light)
-    bpy.context.scene.collection.objects.unlink(area_light)
+bpy.ops.object.light_add(type="AREA", location=(0, 0, 5))
+area_light = bpy.context.object
+area_light.name = "primary_light"
+area_light.data.energy = 700
+area_light.data.shape = "DISK"
+area_light.data.size = 5
+studio_collection.objects.link(area_light)
+bpy.context.scene.collection.objects.unlink(area_light)
+
+
+for module, fbx_path in sofa_modules.items():
+
+    fbx_file_path = os.path.join(directory, fbx_path)
+    bake_output_path = os.path.join(directory, "sofa_ao/" + module + "AO_1k.hdr")  # HDR AO texture (1K)
+    export_glb_path = os.path.join(directory, "sofa_glb/" + module + ".glb")  # GLB file
+    # blend_file_path = os.path.join(directory, "cube.blend")  # Blender file
 
     # ✅ Import Input Models
     input_collection = bpy.data.collections.new(name="INPUT")
     bpy.context.scene.collection.children.link(input_collection)
-
     bpy.ops.import_scene.fbx(filepath=fbx_file_path)
     for obj in bpy.context.selected_objects:
         input_collection.objects.link(obj)
@@ -175,6 +214,14 @@ else:
 
     print(f"✅ Exported GLB file: {export_glb_path}")
 
-    # ✅ Save Blend File
-    bpy.ops.wm.save_as_mainfile(filepath=blend_file_path)
-    print(f"✅ File saved at: {blend_file_path}")
+    for obj in input_collection.objects:
+        bpy.data.objects.remove(obj, do_unlink=True)
+    bpy.data.collections.remove(input_collection)
+
+    for obj in output_collection.objects:
+        bpy.data.objects.remove(obj, do_unlink=True)
+    bpy.data.collections.remove(output_collection)
+
+    # # ✅ Save Blend File
+    # bpy.ops.wm.save_as_mainfile(filepath=blend_file_path)
+    # print(f"✅ File saved at: {blend_file_path}")
