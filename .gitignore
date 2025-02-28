@@ -1,0 +1,5 @@
+# Ignore object files, binaries, and debug files
+*.glb
+*.fbx
+*.hdr
+*.blend
