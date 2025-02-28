@@ -3,11 +3,11 @@ import os
 
 directory = os.path.dirname(os.path.abspath(__file__))
 fbx_file_path = os.path.join(directory, "sofa_highpoly/Tylko Modul 100x100.fbx")
-bake_output_path = os.path.join(directory, "baked_ao_4k.hdr")
-export_glb_path = os.path.join(directory, "exported_output.glb")
-blend_file_path = os.path.join(directory, "cube.blend")
+bake_output_path = os.path.join(directory, "baked_ao_1k.hdr")  # HDR AO texture (1K)
+export_glb_path = os.path.join(directory, "exported_output.glb")  # GLB file
+blend_file_path = os.path.join(directory, "cube.blend")  # Blender file
 
-# Init blend file
+# ✅ Initialize Blend File
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 scene.render.engine = "CYCLES"
@@ -17,7 +17,7 @@ scene.cycles.samples = 128
 if not os.path.exists(fbx_file_path):
     print(f"Error: FBX file not found at {fbx_file_path}")
 else:
-    # Setup studio
+    # ✅ Create Studio Setup
     studio_collection = bpy.data.collections.new(name="STUDIO")
     bpy.context.scene.collection.children.link(studio_collection)
 
@@ -36,7 +36,7 @@ else:
     studio_collection.objects.link(area_light)
     bpy.context.scene.collection.objects.unlink(area_light)
 
-    # Input models
+    # ✅ Import Input Models
     input_collection = bpy.data.collections.new(name="INPUT")
     bpy.context.scene.collection.children.link(input_collection)
 
@@ -45,7 +45,7 @@ else:
         input_collection.objects.link(obj)
         bpy.context.scene.collection.objects.unlink(obj)
 
-    # Output models prep
+    # ✅ Duplicate Input for Output
     output_collection = bpy.data.collections.new(name="OUTPUT")
     bpy.context.scene.collection.children.link(output_collection)
     for obj in input_collection.objects:
@@ -54,7 +54,7 @@ else:
             duplicate.data = obj.data.copy()
             output_collection.objects.link(duplicate)
 
-    # Apply decimate
+    # ✅ Apply Decimate Modifiers
     for obj in output_collection.objects:
         bpy.context.view_layer.objects.active = obj
         obj.select_set(True)
@@ -67,12 +67,12 @@ else:
         decimate_planar = obj.modifiers.new(name="Decimate_Planar", type="DECIMATE")
         decimate_planar.decimate_type = "DISSOLVE"
         decimate_planar.angle_limit = 2 * (3.14159265 / 180)
-        decimate_planar.delimit = { "NORMAL", "MATERIAL", "SEAM", "SHARP", "UV" }
+        decimate_planar.delimit = {"NORMAL", "MATERIAL", "SEAM", "SHARP", "UV"}
         bpy.ops.object.modifier_apply(modifier=decimate_planar.name)
 
         obj.select_set(False)
 
-    # Add lightmap UV channel
+    # ✅ Add Lightmap UV Channel
     for obj in output_collection.objects:
         mesh = obj.data
         uv_layer = mesh.uv_layers.new(name="lightmap")
@@ -80,109 +80,101 @@ else:
         for uv in mesh.uv_layers:
             uv.active_render = (uv.name == "lightmap")
 
-    # Create image buffer for baked AO
+    # ✅ Create 4K AO Image for Baking
     ao_image = bpy.data.images.new(name="Baked_AO_4K", width=4096, height=4096, alpha=False, float_buffer=True)
     ao_image.generated_color = (1, 1, 1, 1)
 
-    # Merge input models
+    # ✅ Merge Input Models
     bpy.ops.object.select_all(action="DESELECT")
     for obj in input_collection.objects:
         obj.select_set(True)
     bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
     bpy.ops.object.join()
 
-    # Merge output models
+    # ✅ Merge Output Models
     bpy.ops.object.select_all(action="DESELECT")
     for obj in output_collection.objects:
         obj.select_set(True)
     bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
     bpy.ops.object.join()
 
-    # Prepare meshes for uv unwrapping
+    # ✅ Prepare for UV Unwrapping
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_mode(type="FACE")
     bpy.ops.mesh.select_all(action="SELECT")
 
-    # Unwrapping UV
+    # ✅ Unwrapping UV
     bpy.ops.uv.smart_project(angle_limit=60, island_margin=0.001, correct_aspect=True)
     bpy.ops.uv.select_all(action="SELECT")
     bpy.ops.uv.pack_islands(rotate=True, margin=0.001)
 
-    # Prepra material for baking output
+    # ✅ Prepare Material for AO Baking
     for obj in output_collection.objects:
-        ## Setup material
         obj.data.materials.clear()
         material = bpy.data.materials.new(name=f"{obj.name}_material")
         obj.data.materials.append(material)
         material.use_nodes = True
         nodes = material.node_tree.nodes
-        ## Create texture
         img_tex_node = nodes.new(type="ShaderNodeTexImage")
         img_tex_node.image = ao_image
-        img_tex_node.label = "AO_baked_textture"
+        img_tex_node.label = "AO_Baked_Texture"
         img_tex_node.select = True
         material.node_tree.nodes.active = img_tex_node
 
     bpy.ops.object.mode_set(mode="OBJECT")
-    # ✅ Select all INPUT objects as the source
+
+    # ✅ Set Up AO Baking
     bpy.ops.object.select_all(action="DESELECT")
     for obj in input_collection.objects:
         obj.select_set(True)
-
-    # ✅ Select all OUTPUT objects as the bake target (keeping INPUT selected)
     for obj in output_collection.objects:
         obj.select_set(True)
         bpy.context.view_layer.objects.active = obj  # Make active for baking
 
-    # ✅ Set Bake Type to Ambient Occlusion
-    scene.render.bake.use_selected_to_active = True  # Selected to Active Baking
-    scene.render.bake.use_pass_direct = False  # Ignore direct lighting
-    scene.render.bake.use_pass_indirect = False  # Ignore indirect lighting
-    scene.render.bake.use_pass_color = True  # Bake AO onto texture
-
-    # ✅ Set Bake Parameters from Screenshot
-    scene.render.bake.cage_extrusion = 0.02  # 2 cm Extrusion (converted to meters)
-    scene.render.bake.max_ray_distance = 0.0  # Max Ray Distance: 0 cm
-
-    # ✅ Set Margin Type & Size
-    scene.render.bake.margin_type = 'ADJACENT_FACES'
-    scene.render.bake.margin = 16  # Margin Size: 16 px
+    scene.render.bake.use_selected_to_active = True
+    scene.render.bake.use_pass_direct = False
+    scene.render.bake.use_pass_indirect = False
+    scene.render.bake.use_pass_color = True
+    scene.render.bake.cage_extrusion = 0.02
+    scene.render.bake.max_ray_distance = 0.0
+    scene.render.bake.margin_type = "ADJACENT_FACES"
+    scene.render.bake.margin = 16
 
     print("🔥 Baking AO... This may take some time.")
-    bpy.ops.object.bake(type='AO')
+    bpy.ops.object.bake(type="AO")
     print("✅ AO Baking Completed!")
 
-    # ✅ Save Baked AO Texture to Disk
+    # ✅ Resize AO Image to 1K and Save as HDR
     ao_image.scale(1024, 1024)
     ao_image.filepath_raw = bake_output_path
-    ao_image.file_format = 'HDR'
+    ao_image.file_format = "HDR"
     ao_image.save()
+    print(f"✅ AO texture resized to 1K and saved as HDR: {bake_output_path}")
 
-    # ✅ Ensure we're in Object Mode before separating meshes
+    # ✅ Separate Output Meshes
     bpy.ops.object.mode_set(mode="OBJECT")
-    # ✅ Select the merged OUTPUT object
     bpy.ops.object.select_all(action="DESELECT")
     for obj in output_collection.objects:
         obj.select_set(True)
         bpy.context.view_layer.objects.active = obj
-    # ✅ Separate all objects by Loose Parts (Splits into individual meshes)
     bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.separate(type='LOOSE')
+    bpy.ops.mesh.separate(type="LOOSE")
     bpy.ops.object.mode_set(mode="OBJECT")
 
+    print("✅ Output mesh split into separate objects.")
 
     # ✅ Export as GLB (Without Materials, with Y-Up)
     bpy.ops.export_scene.gltf(
         filepath=export_glb_path,
-        export_format='GLB',  # Export as .glb
-        use_selection=True,  # Only export selected objects
-        export_apply=True,  # Apply all transforms
-        export_yup=True,  # Set Y as Up
-        export_materials='NONE'  # Do not export materials
+        export_format="GLB",
+        use_selection=True,
+        export_apply=True,
+        export_yup=True,
+        export_materials="NONE"
     )
 
     print(f"✅ Exported GLB file: {export_glb_path}")
 
-    # Save file
+    # ✅ Save Blend File
     bpy.ops.wm.save_as_mainfile(filepath=blend_file_path)
-    print(f"File saved at:  {blend_file_path}")
+    print(f"✅ File saved at: {blend_file_path}")
