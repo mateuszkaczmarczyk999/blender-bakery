@@ -93,23 +93,23 @@ for module, fbx_path in sofa_modules.items():
             duplicate.data = obj.data.copy()
             output_collection.objects.link(duplicate)
 
-    # ✅ Apply Decimate Modifiers
-    for obj in output_collection.objects:
-        bpy.context.view_layer.objects.active = obj
-        obj.select_set(True)
+    # # ✅ Apply Decimate Modifiers
+    # for obj in output_collection.objects:
+    #     bpy.context.view_layer.objects.active = obj
+    #     obj.select_set(True)
 
-        decimate_unsub = obj.modifiers.new(name="Decimate_Unsubdiv", type="DECIMATE")
-        decimate_unsub.decimate_type = "UNSUBDIV"
-        decimate_unsub.iterations = 2
-        bpy.ops.object.modifier_apply(modifier=decimate_unsub.name)
+    #     decimate_unsub = obj.modifiers.new(name="Decimate_Unsubdiv", type="DECIMATE")
+    #     decimate_unsub.decimate_type = "UNSUBDIV"
+    #     decimate_unsub.iterations = 2
+    #     bpy.ops.object.modifier_apply(modifier=decimate_unsub.name)
 
-        decimate_planar = obj.modifiers.new(name="Decimate_Planar", type="DECIMATE")
-        decimate_planar.decimate_type = "DISSOLVE"
-        decimate_planar.angle_limit = 2 * (3.14159265 / 180)
-        decimate_planar.delimit = {"NORMAL", "MATERIAL", "SEAM", "SHARP", "UV"}
-        bpy.ops.object.modifier_apply(modifier=decimate_planar.name)
+    #     decimate_planar = obj.modifiers.new(name="Decimate_Planar", type="DECIMATE")
+    #     decimate_planar.decimate_type = "DISSOLVE"
+    #     decimate_planar.angle_limit = 2 * (3.14159265 / 180)
+    #     decimate_planar.delimit = {"NORMAL", "MATERIAL", "SEAM", "SHARP", "UV"}
+    #     bpy.ops.object.modifier_apply(modifier=decimate_planar.name)
 
-        obj.select_set(False)
+    #     obj.select_set(False)
 
     # ✅ Add Lightmap UV Channel
     for obj in output_collection.objects:
