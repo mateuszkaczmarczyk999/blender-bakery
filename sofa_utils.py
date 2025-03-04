@@ -10,12 +10,9 @@ from common import export_selected_glb
 def setup_scene():
     # ✅ Initialize Blend File
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    scene = bpy.context.scene
-    scene.render.engine = "CYCLES"
-    scene.cycles.device = "GPU"
-    scene.cycles.samples = 128
-
-    return scene
+    bpy.context.scene.render.engine = "CYCLES"
+    bpy.context.scene.cycles.device = "GPU"
+    bpy.context.scene.cycles.samples = 128
 
 
 def setup_studio():
@@ -39,6 +36,27 @@ def setup_studio():
     bpy.context.scene.collection.objects.unlink(area_light)
 
     return studio_collection
+
+def setup_bake(bake_cfg):
+    bpy.context.scene.render.bake.use_selected_to_active = True
+    bpy.context.scene.render.bake.use_pass_direct = False
+    bpy.context.scene.render.bake.use_pass_indirect = False
+    bpy.context.scene.render.bake.use_pass_color = True
+    bpy.context.scene.render.bake.cage_extrusion = bake_cfg["cage_extrusion"]
+    bpy.context.scene.render.bake.max_ray_distance = bake_cfg["max_ray_distance"]
+    bpy.context.scene.render.bake.margin_type = "ADJACENT_FACES"
+    bpy.context.scene.render.bake.margin = bake_cfg["margin"]
+
+def bake(image, bake_cfg, output_path):
+    print("🔥 Baking AO... This may take some time.")
+    bpy.ops.object.bake(type="AO")
+    print("✅ AO Baking Completed!")
+
+    image.scale(bake_cfg["resolution"], bake_cfg["resolution"])
+    image.filepath_raw = output_path
+    image.file_format = "HDR"
+    image.save()
+    print(f"💾 AO texture resized and saved as HDR: {output_path}")
 
 
 def categorize_meshes_in_collection(collection, module, module_parts = None):
