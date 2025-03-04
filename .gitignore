@@ -3,3 +3,6 @@
 *.fbx
 *.hdr
 *.blend
+*.json
+
+__pycache__
