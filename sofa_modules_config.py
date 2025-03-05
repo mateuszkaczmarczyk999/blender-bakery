@@ -3,19 +3,19 @@ import math
 default_transform = {
     "position": { "x": 0, "y": 0, "z": 0 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "scale": { "x": 1.03, "y": 1.03, "z": 1.0 },
+    "scale": { "x": 0.03, "y": 0.03, "z": 0.0 },
 }
 
 rotate_transform = {
     "position": { "x": 0, "y": 0, "z": 0 },
     "rotation": { "x": 0, "y": 0, "z": math.radians(90) },
-    "scale": { "x": 1.03, "y": 1.03, "z": 1.0 },
+    "scale": { "x": 0.03, "y": 0.03, "z": 0.0 },
 }
 
 move_transform = {
     "position": { "x": 0, "y": 0.3, "z": 0 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "scale": { "x": 1.03, "y": 1.03, "z": 1.0 },
+    "scale": { "x": 0.03, "y": 0.03, "z": 0.0 },
 }
 
 default_decimate = {

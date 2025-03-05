@@ -64,14 +64,13 @@ def categorize_meshes_in_collection(collection, module, module_parts = None):
         center = find_mesh_center(mesh)
         select_none()
         select_mesh(mesh)
-
-        if (center.z < 0.2):
+        if (center.z < 0.01):
             rename_mesh(mesh, module + "_LEG")
             if (module_parts != None): module_parts["legs"].append({ mesh.name: [center.x, center.y, center.z] })
-        elif (center.z > 0.3 and center.z < 0.8):
+        elif (center.z > 0.1 and center.z < 0.4):
             rename_mesh(mesh, module + "_SEAT")
             if (module_parts != None): module_parts["seat"].append({ mesh.name: [center.x, center.y, center.z] })
-        elif (center.z > 0.8 and center.z < 1.0):
+        elif (center.z > 0.4 and center.z < 0.6):
             rename_mesh(mesh, module + "_BACKREST")
             if (module_parts != None): module_parts["backrest"].append({ mesh.name: [center.x, center.y, center.z] })
         else:
