@@ -27,7 +27,7 @@ default_decimate = {
 small_decimate = {
     "apply": True,
     "unsubdiv": 0,
-    "dissolve": math.radians(1),
+    "dissolve": math.radians(0.8),
 }
 
 no_decimate = {
