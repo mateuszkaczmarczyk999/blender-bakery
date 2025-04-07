@@ -81,7 +81,7 @@ for module, cfg in config.items():
 
 
     # ✅ Create 4K AO Image for Baking
-    ao_image = create_image_for_baking()
+    ao_image = create_image_for_baking("Baked_AO_4K", 4096)
     bake_output_path = os.path.join(directory, "sofa_ao/" + module + "_AO.hdr")
     # ✅ Prepare UVs
     set_edit_mode()

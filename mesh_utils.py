@@ -123,7 +123,16 @@ def merge_collection(collection):
     bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
     bpy.ops.object.join()
 
-def create_image_for_baking():
-    ao_image = bpy.data.images.new(name="Baked_AO_4K", width=4096, height=4096, alpha=False, float_buffer=True)
+def create_image_for_baking(name, size):
+    ao_image = bpy.data.images.new(name=name, width=size, height=size, alpha=False, float_buffer=True)
     ao_image.generated_color = (1, 1, 1, 1)
     return ao_image
+
+def create_plane(name, width, height):
+    bpy.ops.mesh.primitive_plane_add(size=1, enter_editmode=False)
+    plane = bpy.context.active_object
+    plane.name = name
+    plane.scale.x = width / 2
+    plane.scale.y = height / 2
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    return plane
