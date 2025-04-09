@@ -13,13 +13,16 @@ def export_selected_glb(filepath):
 
     bpy.ops.export_scene.gltf(
         filepath=filepath,
-        export_format="GLB",
+        export_format='GLB',
         use_selection=True,
         export_apply=True,
-        export_yup=True,
-        export_materials="NONE"
+        export_draco_mesh_compression_enable=True,
+        export_draco_mesh_compression_level=6,
+        export_draco_position_quantization=14,
+        export_draco_normal_quantization=10,
+        export_draco_texcoord_quantization=12,
     )
-    print(f"💾 Exported selected object as GLB: {filepath}")
+    print(f"💾 Exported and compressed selected object as GLB: {filepath}")
 
 
 """

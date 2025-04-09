@@ -74,12 +74,57 @@ def pack_uv():
     bpy.ops.uv.select_all(action="SELECT")
     bpy.ops.uv.pack_islands(rotate=True, margin=0.001)
 
+def assign_material(obj, name="NewMaterial"):
+    mat = bpy.data.materials.new(name=name)
+    mat.use_nodes = True
+    bsdf = mat.node_tree.nodes.get("Principled BSDF")
+    bsdf.inputs["Base Color"].default_value = (0.5, 0.5, 0.5, 1)
+    bsdf.inputs["Roughness"].default_value = 1.0
+
+    if obj.data.materials:
+        obj.data.materials[0] = mat
+    else:
+        obj.data.materials.append(mat)
+
+def pack_uv_into_tile(obj, tile_index, atlas_size=4096, tile_size=512):
+    tiles_per_row = atlas_size // tile_size
+    uv_tile_scale = tile_size / atlas_size
+
+    row = tile_index // tiles_per_row
+    col = tile_index % tiles_per_row
+    offset_u = col * uv_tile_scale
+    offset_v = row * uv_tile_scale
+
+    bpy.ops.mesh.select_mode(type="FACE")
+    bpy.ops.uv.select_all(action="SELECT")
+    bpy.ops.uv.pack_islands(rotate=True, margin=0.05)
+
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    mesh = obj.data
+    uv_layer = mesh.uv_layers.active.data
+    for loop in uv_layer:
+        loop.uv[0] = loop.uv[0] * uv_tile_scale + offset_u
+        loop.uv[1] = loop.uv[1] * uv_tile_scale + offset_v
+
+    print(f"✅ Packed '{obj.name}' into atlas tile ({col}, {row})")
+
+def scale_and_translate_uv(obj, uv_tile_scale, offset_u, offset_v):
+    mesh = obj.data
+    uv_layer = mesh.uv_layers.active.data
+    for loop in uv_layer:
+        loop.uv[0] = loop.uv[0] * uv_tile_scale + offset_u
+        loop.uv[1] = loop.uv[1] * uv_tile_scale + offset_v
+
 def set_bake_result_material(mesh, img):
     mesh.data.materials.clear()
     material = bpy.data.materials.new(name=f"{mesh.name}_material")
     mesh.data.materials.append(material)
     material.use_nodes = True
     nodes = material.node_tree.nodes
+    bsdf = nodes.get("Principled BSDF")
+    bsdf.inputs["Base Color"].default_value = (0.5, 0.5, 0.5, 1)
+    bsdf.inputs["Roughness"].default_value = 1.0
     img_tex_node = nodes.new(type="ShaderNodeTexImage")
     img_tex_node.image = img
     img_tex_node.label = "AO_Baked_Texture"
@@ -132,7 +177,7 @@ def create_plane(name, width, height):
     bpy.ops.mesh.primitive_plane_add(size=1, enter_editmode=False)
     plane = bpy.context.active_object
     plane.name = name
-    plane.scale.x = width / 2
-    plane.scale.y = height / 2
+    plane.scale.x = width
+    plane.scale.y = height
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     return plane
