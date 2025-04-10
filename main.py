@@ -48,8 +48,8 @@ sofa_parts = {}
 setup_scene()
 setup_studio()
 
-image_size=4096
-tile_size=896
+image_size=4096*2
+tile_size=800*2
 uv_tile_scale = tile_size / image_size
 
 # ✅ Create 4K AO Image for Baking
@@ -60,34 +60,14 @@ combined_image = create_image_for_baking("Baked_Combined_4K", image_size)
 
 
 for module, cfg in config.items():
-    walls_collection = create_collection("WALLS")
-
-    bpy.ops.mesh.primitive_cube_add(size=2, location=((cfg["envelope"]["width"]/2 + 1.2), 0, 0))
-    box_left = bpy.context.object
-    box_left.name = "box-left"
-    assign_material(box_left, "box-left")
-    walls_collection.objects.link(box_left)
-    bpy.context.scene.collection.objects.unlink(box_left)
-
-    if module.startswith("S01_CN"):
-        bpy.ops.mesh.primitive_cube_add(size=2, location=(0, -(cfg["envelope"]["width"]/2 + 1.2), 0))
-    else:
-        bpy.ops.mesh.primitive_cube_add(size=2, location=(-(cfg["envelope"]["width"]/2 + 1.2), 0 , 0))
-    box_right = bpy.context.object
-    box_right.name = "box-right"
-    assign_material(box_right, "box_right")
-    walls_collection.objects.link(box_right)
-    bpy.context.scene.collection.objects.unlink(box_right)
-
-
     # ✅ Import Input Models
-    input_collection = create_collection("INPUT")
-    fbx_file_path = os.path.join(directory, cfg["highpoly_filepath"])
-    bpy.ops.import_scene.fbx(filepath=fbx_file_path)
-    for obj in bpy.context.selected_objects:
-        transform_mesh(obj, cfg["transform"])
-        input_collection.objects.link(obj)
-        bpy.context.scene.collection.objects.unlink(obj)
+    # input_collection = create_collection("INPUT")
+    # fbx_file_path = os.path.join(directory, cfg["highpoly_filepath"])
+    # bpy.ops.import_scene.fbx(filepath=fbx_file_path)
+    # for obj in bpy.context.selected_objects:
+    #     transform_mesh(obj, cfg["transform"])
+    #     input_collection.objects.link(obj)
+    #     bpy.context.scene.collection.objects.unlink(obj)
 
     output_collection = create_collection("OUTPUT")
     fbx_file_path = os.path.join(directory, cfg["lowpoly_filepath"])
@@ -115,12 +95,12 @@ for module, cfg in config.items():
 
 
     # ✅ Merge Models
-    merge_collection(input_collection)
+    # merge_collection(input_collection)
     merge_collection(output_collection)
     print("✅ Collection merged!")
 
-    for obj in input_collection.objects:
-        assign_material(obj, "input")
+    # for obj in input_collection.objects:
+    #     assign_material(obj, "input")
 
     # # ✅ Create 4K AO Image for Baking
     # ao_image = create_image_for_baking("Baked_AO_4K", 4096)
@@ -148,8 +128,8 @@ for module, cfg in config.items():
     # ✅ AO Baking
     set_object_mode()
     select_none()
-    for obj in input_collection.objects:
-        obj.select_set(True)
+    # for obj in input_collection.objects:
+    #     obj.select_set(True)
     for obj in output_collection.objects:
         obj.select_set(True)
         bpy.context.view_layer.objects.active = obj
@@ -165,12 +145,12 @@ for module, cfg in config.items():
     # ✅ Combined Baking
     set_object_mode()
     select_none()
-    for obj in input_collection.objects:
-        obj.select_set(True)
+    # for obj in input_collection.objects:
+    #     obj.select_set(True)
     for obj in output_collection.objects:
         obj.select_set(True)
         bpy.context.view_layer.objects.active = obj
-    setup_bake(cfg["bake"], True)
+    setup_bake(cfg["bake"])
     if (cfg["bake"]["apply"]):
         bake(combined_image, cfg["bake"], "COMBINED")
 
@@ -189,10 +169,10 @@ for module, cfg in config.items():
     for obj in output_collection.objects:
         select_mesh(obj)
     split_selected_mesh()
-    select_none()
-    for obj in input_collection.objects:
-        select_mesh(obj)
-    split_selected_mesh()
+    # select_none()
+    # for obj in input_collection.objects:
+    #     select_mesh(obj)
+    # split_selected_mesh()
     print("✅ Meshes in collections separated!")
 
 
@@ -204,9 +184,9 @@ for module, cfg in config.items():
         "headrest": [],
     }
     categorize_meshes_in_collection(output_collection, module)
-    categorize_meshes_in_collection(input_collection, module, module_parts)
+    # categorize_meshes_in_collection(input_collection, module, module_parts)
     export_meshes_from_collection(output_collection, directory, "glb")
-    export_meshes_from_collection(input_collection, directory, "fbx")
+    # export_meshes_from_collection(input_collection, directory, "fbx")
     sofa_parts[module] = module_parts
     print("✅ Exports done!")
 
@@ -218,9 +198,8 @@ for module, cfg in config.items():
 
 
     # ✅ Clean the scene
-    flush_collection(input_collection)
+    # flush_collection(input_collection)
     flush_collection(output_collection)
-    flush_collection(walls_collection)
     print("✅ Scene is clean!")
 
 

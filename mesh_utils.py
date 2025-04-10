@@ -78,7 +78,7 @@ def assign_material(obj, name="NewMaterial"):
     mat = bpy.data.materials.new(name=name)
     mat.use_nodes = True
     bsdf = mat.node_tree.nodes.get("Principled BSDF")
-    bsdf.inputs["Base Color"].default_value = (0.5, 0.5, 0.5, 1)
+    bsdf.inputs["Base Color"].default_value = (0.2, 0.2, 0.2, 1)
     bsdf.inputs["Roughness"].default_value = 1.0
 
     if obj.data.materials:

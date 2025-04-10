@@ -54,17 +54,8 @@ no_bake = {
 
 
 config = {
-    # "S01_AR_D07_W02": {
-    #     "index": 0,
-    #     "highpoly_filepath": "SOFA_HP/HP_Armrest.fbx",
-    #     "lowpoly_filepath": "SOFA_LP/LP_Armrest.fbx",
-    #     "envelope": { "width": 0.25, "depth": 0.875 },
-    #     "transform": default_transform,
-    #     "decimate": no_decimate,
-    #     "bake": default_bake,
-    # },
     # "S01_CN_D08_W08": {
-    #     "index": 1,
+    #     "index": 0,
     #     "highpoly_filepath": "SOFA_HP/HP_Corner_100x100.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Corner_100x100.fbx",
     #     "envelope": { "width": 1, "depth": 1 },
@@ -73,7 +64,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_CN_D08_W08_N": {
-    #     "index": 2,
+    #     "index": 1,
     #     "highpoly_filepath": "SOFA_HP/HP_Corner_100x100_siedzisko.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Corner_100x100_siedzisko.fbx",
     #     "envelope": { "width": 1, "depth": 1 },
@@ -82,7 +73,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_CN_D09_W09": {
-    #     "index": 3,
+    #     "index": 2,
     #     "highpoly_filepath": "SOFA_HP/HP_Corner_112_5x112_5.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Corner_112_5x112_5.fbx",
     #     "envelope": { "width": 1.125, "depth": 1.125 },
@@ -91,7 +82,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_CN_D09_W09_N": {
-    #     "index": 4,
+    #     "index": 3,
     #     "highpoly_filepath": "SOFA_HP/HP_Corner_112_5x112_5_siedzisko.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Corner_112_5x112_5_siedzisko.fbx",
     #     "envelope": { "width": 1.125, "depth": 1.125 },
@@ -100,7 +91,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_ST_D08_W06": {
-    #     "index": 5,
+    #     "index": 4,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_75x100.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_75x100.fbx",
     #     "envelope": { "width": 0.75, "depth": 1 },
@@ -109,7 +100,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_ST_D08_W07": {
-    #     "index": 6,
+    #     "index": 5,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_87_5x100.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_87_5x100.fbx",
     #     "envelope": { "width": 0.875, "depth": 1 },
@@ -118,7 +109,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_ST_D08_W08": {
-    #     "index": 7,
+    #     "index": 6,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_100x100.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_100x100.fbx",
     #     "envelope": { "width": 1, "depth": 1 },
@@ -127,7 +118,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_ST_D08_W09": {
-    #     "index": 8,
+    #     "index": 7,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_112_5x100.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_112_5x100.fbx",
     #     "envelope": { "width": 1.125, "depth": 1 },
@@ -136,7 +127,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_ST_D09_W06": {
-    #     "index": 9,
+    #     "index": 8,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_75x112_5.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_75x112_5.fbx",
     #     "envelope": { "width": 0.75, "depth": 1.125 },
@@ -145,7 +136,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_ST_D09_W07": {
-    #     "index": 10,
+    #     "index": 9,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_87_5x112_5.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_87_5x112_5.fbx",
     #     "envelope": { "width": 0.875, "depth": 1.125 },
@@ -154,7 +145,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_ST_D09_W08": {
-    #     "index": 11,
+    #     "index": 10,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_100x112_5.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_100x112_5.fbx",
     #     "envelope": { "width": 1, "depth": 1.125 },
@@ -163,7 +154,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_ST_D09_W09": {
-    #     "index": 12,
+    #     "index": 11,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_112_5x112_5.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_112_5x112_5.fbx",
     #     "envelope": { "width": 1.125, "depth": 1.125 },
@@ -172,7 +163,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_CL_D13_W07": {
-    #     "index": 13,
+    #     "index": 12,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_87_5x162_5.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_87_5x162_5.fbx",
     #     "envelope": { "width": 0.875, "depth": 1.625 },
@@ -181,7 +172,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_CL_D13_W08": {
-    #     "index": 14,
+    #     "index": 13,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_100x162_5.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_100x162_5.fbx",
     #     "envelope": { "width": 1, "depth": 1.625 },
@@ -190,7 +181,7 @@ config = {
     #     "bake": default_bake,
     # },
     # "S01_CL_D13_W09": {
-    #     "index": 15,
+    #     "index": 14,
     #     "highpoly_filepath": "SOFA_HP/HP_Modul_112_5x162_5.fbx",
     #     "lowpoly_filepath": "SOFA_LP/LP_Modul_112_5x162_5.fbx",
     #     "envelope": { "width": 1.125, "depth": 1.625 },
@@ -198,7 +189,7 @@ config = {
     #     "decimate": no_decimate,
     #     "bake": default_bake,
     # },
-    # PART 2
+
     "S01_FR_D05_W06": {
         "index": 0,
         "highpoly_filepath": "SOFA_HP/HP_Ottoman_75x62_5.fbx",
@@ -375,6 +366,15 @@ config = {
         "highpoly_filepath": "SOFA_HP/HP_Ottoman_100x62_5_siedzisko.fbx",
         "lowpoly_filepath": "SOFA_LP/LP_Ottoman_100x62_5_siedzisko.fbx",
         "envelope": { "width": 1, "depth": 0.625 },
+        "transform": default_transform,
+        "decimate": no_decimate,
+        "bake": default_bake,
+    },
+    "S01_AR_D07_W02": {
+        "index": 20,
+        "highpoly_filepath": "SOFA_HP/HP_Armrest.fbx",
+        "lowpoly_filepath": "SOFA_LP/LP_Armrest.fbx",
+        "envelope": { "width": 0.25, "depth": 0.875 },
         "transform": default_transform,
         "decimate": no_decimate,
         "bake": default_bake,

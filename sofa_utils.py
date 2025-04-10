@@ -1,7 +1,7 @@
 import math
 import os
 import bpy  # type: ignore
-from mesh_utils import find_mesh_center
+from mesh_utils import assign_material, find_mesh_center
 from mesh_utils import select_mesh
 from mesh_utils import select_none
 from mesh_utils import rename_mesh
@@ -24,15 +24,16 @@ def setup_studio():
     bpy.ops.mesh.primitive_plane_add(size=5, location=(0, 0, -0.01))
     ground = bpy.context.object
     ground.name = "ground"
+    assign_material(ground, "ground_material")
     studio_collection.objects.link(ground)
     bpy.context.scene.collection.objects.unlink(ground)
 
     bpy.ops.object.light_add(type="AREA", location=(0, 0, 2.5), rotation=(0, 0, 0))
     area_light = bpy.context.object
     area_light.name = "secondary_light"
-    area_light.data.energy = 150
+    area_light.data.energy = 250
     area_light.data.shape = "SQUARE"
-    area_light.data.size = 1
+    area_light.data.size = 0.5
     studio_collection.objects.link(area_light)
     bpy.context.scene.collection.objects.unlink(area_light)
 
@@ -46,11 +47,11 @@ def setup_studio():
 
     return studio_collection
 
-def setup_bake(bake_cfg, all=False):
+def setup_bake(bake_cfg):
     bpy.context.scene.render.bake.use_clear = False
-    bpy.context.scene.render.bake.use_selected_to_active = True
-    bpy.context.scene.render.bake.use_pass_direct = all
-    bpy.context.scene.render.bake.use_pass_indirect = all
+    bpy.context.scene.render.bake.use_selected_to_active = False
+    bpy.context.scene.render.bake.use_pass_direct = True
+    bpy.context.scene.render.bake.use_pass_indirect = True
     bpy.context.scene.render.bake.use_pass_color = True
     bpy.context.scene.render.bake.cage_extrusion = bake_cfg["cage_extrusion"]
     bpy.context.scene.render.bake.max_ray_distance = bake_cfg["max_ray_distance"]
