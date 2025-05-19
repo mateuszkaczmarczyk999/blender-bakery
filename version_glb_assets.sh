@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="v2"
+version="v3"
 source_dir="./sofa_glb"
 target_dir="./versioned/glb"
 

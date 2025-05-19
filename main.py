@@ -121,38 +121,38 @@ for module, cfg in config.items():
         pack_uv_into_tile(obj, cfg["index"], image_size, tile_size)
 
     # ✅ Prepare Material for AO Baking
-    for obj in output_collection.objects:
-        set_bake_result_material(obj, ao_image)
-    print("✅ Materials ready for AO baking!")
+    # for obj in output_collection.objects:
+    #     set_bake_result_material(obj, ao_image)
+    # print("✅ Materials ready for AO baking!")
 
     # ✅ AO Baking
-    set_object_mode()
-    select_none()
-    # for obj in input_collection.objects:
+    # set_object_mode()
+    # select_none()
+    # # for obj in input_collection.objects:
+    # #     obj.select_set(True)
+    # for obj in output_collection.objects:
     #     obj.select_set(True)
-    for obj in output_collection.objects:
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
-    setup_bake(cfg["bake"])
-    if (cfg["bake"]["apply"]):
-        bake(ao_image, cfg["bake"], "AO")
+    #     bpy.context.view_layer.objects.active = obj
+    # setup_bake(cfg["bake"])
+    # if (cfg["bake"]["apply"]):
+    #     bake(ao_image, cfg["bake"], "AO")
 
-    # ✅ Prepare Material for Combined Baking
-    for obj in output_collection.objects:
-        set_bake_result_material(obj, combined_image)
-    print("✅ Materials ready for Combined baking!")
+    # # ✅ Prepare Material for Combined Baking
+    # for obj in output_collection.objects:
+    #     set_bake_result_material(obj, combined_image)
+    # print("✅ Materials ready for Combined baking!")
 
-    # ✅ Combined Baking
-    set_object_mode()
-    select_none()
-    # for obj in input_collection.objects:
+    # # ✅ Combined Baking
+    # set_object_mode()
+    # select_none()
+    # # for obj in input_collection.objects:
+    # #     obj.select_set(True)
+    # for obj in output_collection.objects:
     #     obj.select_set(True)
-    for obj in output_collection.objects:
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
-    setup_bake(cfg["bake"])
-    if (cfg["bake"]["apply"]):
-        bake(combined_image, cfg["bake"], "COMBINED")
+    #     bpy.context.view_layer.objects.active = obj
+    # setup_bake(cfg["bake"])
+    # if (cfg["bake"]["apply"]):
+    #     bake(combined_image, cfg["bake"], "COMBINED")
 
 
     # fin_output_path = os.path.join(directory, "sofa_final/" + module + "_FIN.hdr")
@@ -185,15 +185,15 @@ for module, cfg in config.items():
     }
     categorize_meshes_in_collection(output_collection, module)
     # categorize_meshes_in_collection(input_collection, module, module_parts)
-    export_meshes_from_collection(output_collection, directory, "glb")
-    # export_meshes_from_collection(input_collection, directory, "fbx")
+    # export_meshes_from_collection(output_collection, directory, "glb")
+    export_meshes_from_collection(output_collection, directory, "fbx")
     sofa_parts[module] = module_parts
     print("✅ Exports done!")
 
 
     # ✅ Save Blend File
-    blend_file_path = os.path.join(directory, "sofa_blend/" + module + ".blend")
-    save_scene(blend_file_path)
+    # blend_file_path = os.path.join(directory, "sofa_blend/" + module + ".blend")
+    # save_scene(blend_file_path)
 
 
 
@@ -208,11 +208,11 @@ ao_output_path = os.path.join(directory, "sofa_ao/" + "FOOT" + "_AO.hdr")
 # # ✅ Create 4K Combined Image for Baking
 combined_output_path = os.path.join(directory, "sofa_combined/" + "FOOT" + "_GI.hdr")
 
-fin_output_path = os.path.join(directory, "sofa_final/" + "FOOT" + "_AO_GI.hdr")
-fin_image = combine_images_to_rgb(ao_image, combined_image)
-save_hdr_image(fin_image, image_size, fin_output_path)
-save_hdr_image(ao_image, image_size, ao_output_path)
-save_hdr_image(combined_image, image_size, combined_output_path)
+# fin_output_path = os.path.join(directory, "sofa_final/" + "FOOT" + "_AO_GI.hdr")
+# fin_image = combine_images_to_rgb(ao_image, combined_image)
+# save_hdr_image(fin_image, image_size, fin_output_path)
+# save_hdr_image(ao_image, image_size, ao_output_path)
+# save_hdr_image(combined_image, image_size, combined_output_path)
 
 # ✅ Save JSON with origins
 save_in_json(sofa_parts, json_output_path)
